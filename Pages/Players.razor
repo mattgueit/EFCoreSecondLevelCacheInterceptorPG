@@ -1,0 +1,44 @@
+﻿@page "/players"
+
+@using EFCoreSecondLevelCacheInterceptorPG.Data
+@using EFCoreSecondLevelCacheInterceptorPG.Models
+@using EFCoreSecondLevelCacheInterceptorPG.Services
+@inject PlayersService PlayersService
+
+<h1>Players</h1>
+
+@if (players == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Overall</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var player in players)
+            {
+                <tr>
+                    <td>@player.FirstName</td>
+                    <td>@player.LastName</td>
+                    <td>@player.Cards.FirstOrDefault().Overall</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<Player> players;
+
+    protected override async Task OnInitializedAsync()
+    {
+        players = await PlayersService.GetPlayers();
+    }
+}
